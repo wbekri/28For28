@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="" />
+<link href="https://fonts.googleapis.com/css2?family=Jost:wght@200;300;400&family=Courier+Prime:ital,wght@0,400;0,700;1,400&family=Noto+Sans+JP:wght@200;300&display=swap" rel="stylesheet" />
+<style>
+  html, body { margin: 0; padding: 0; background: #23241c; }
+  a { color: #7d1f22; }
+  a:hover { color: #a83338; }
+  @keyframes flipFwd { from { transform: rotateY(0deg); } to { transform: rotateY(-172deg); } }
+  @keyframes flipBack { from { transform: rotateY(0deg); } to { transform: rotateY(172deg); } }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</helmet>
+<div style="min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: {{ shellPad }}; background: radial-gradient(120% 90% at 50% 0%, #3a3b2c 0%, #23241c 60%, #191a14 100%); font-family: 'Courier Prime', monospace;">
+  <div style="position: relative; width: 100%; max-width: 1420px;">
+
+    <div style="position: relative; padding: {{ coverPad }}; border-radius: 6px 14px 14px 6px; background: linear-gradient(150deg, #8b2427 0%, #6f1c1f 55%, #571518 100%); box-shadow: 0 60px 90px -30px rgba(0,0,0,.75), 0 0 0 1px rgba(0,0,0,.4) inset;">
+      <div style="display: grid; grid-template-columns: {{ gridCols }}; perspective: 2400px; background: #e9e7ce; border-radius: 3px; box-shadow: 0 2px 0 rgba(0,0,0,.25);">
+
+        <div style="position: relative; min-width: 0; box-sizing: border-box; padding: {{ pagePad }}; min-height: {{ pageMinH }}; display: flex; flex-direction: column; background: linear-gradient(95deg, #dcd9bd 0%, #eceacf 12%, #edebd2 88%, #e3e0c4 100%); box-shadow: inset -22px 0 34px -26px rgba(60,50,20,.55);">
+          <div style="font-size: {{ kickerSize }}; letter-spacing: .28em; text-transform: uppercase; color: #8a7f5c;">{{ kicker }}</div>
+          <h1 style="margin: 16px 0 0; font-family: 'Jost', sans-serif; font-weight: 300; font-size: {{ titleSize }}; line-height: 1.08; letter-spacing: .14em; color: #34342b; text-wrap: balance;">{{ title }}</h1>
+          <div style="display: flex; align-items: center; gap: 14px; margin-top: 14px;">
+            <span style="display: block; width: 8px; height: 8px; border-radius: 50%; background: #9fb7c9;"></span>
+            <span style="font-family: 'Noto Sans JP', sans-serif; font-weight: 300; font-size: {{ jpSize }}; letter-spacing: .22em; color: #6d6a52;">{{ jp }}</span>
+            <span style="display: block; width: 8px; height: 8px; border-radius: 50%; background: #e2a8bb;"></span>
+          </div>
+          <div style="margin: 28px 0 24px; height: 1px; background: linear-gradient(90deg, rgba(120,110,70,.5), rgba(120,110,70,0));"></div>
+          <div style="display: flex; flex-direction: column; gap: {{ gapMain }}; font-size: {{ bodySize }}; line-height: 1.72; color: #3d3b30; white-space: pre-line; text-wrap: pretty;">
+            <sc-for list="{{ lines }}" as="line" hint-placeholder-count="4">
+              <div>{{ line }}</div>
+            </sc-for>
+          </div>
+          <div style="margin-top: auto; padding-top: 34px; display: flex; align-items: baseline; justify-content: space-between; gap: 20px; font-size: {{ sigSize }}; letter-spacing: .18em; color: #8a7f5c;">
+            <span>{{ signature }}</span>
+            <span>{{ pageLabel }}</span>
+          </div>
+        </div>
+
+        <div style="position: relative; min-width: 0; box-sizing: border-box; padding: {{ pagePadR }}; min-height: {{ pageMinH }}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: {{ gapMain }}; background: linear-gradient(85deg, #e3e0c4 0%, #edebd2 12%, #eceacf 88%, #dcd9bd 100%); box-shadow: inset 22px 0 34px -26px rgba(60,50,20,.55);">
+          <sc-if value="{{ hasImg }}" hint-placeholder-val="{{ true }}">
+            <div style="position: relative; display: block; width: 100%; max-width: min(100%, {{ imgW }}); box-sizing: border-box; padding: {{ framePad }}; background: #fbfaf4; box-shadow: 0 22px 40px -18px rgba(50,40,15,.55), 0 0 0 1px rgba(0,0,0,.06); transform: rotate(-1.2deg);">
+              <div style="position: absolute; top: -14px; left: 50%; width: 92px; height: 26px; margin-left: -46px; background: rgba(224,214,168,.72); box-shadow: 0 1px 2px rgba(0,0,0,.12); transform: rotate(-2deg);"></div>
+              <div role="img" aria-label="{{ caption }}" style="width: 100%; aspect-ratio: {{ imgAspect }}; background-image: url('{{ img }}'); background-size: contain; background-position: center; background-repeat: no-repeat; filter: {{ imgFilter }}; animation: fadeUp .5s ease both;"></div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasVideo }}" hint-placeholder-val="{{ false }}">
+            <div style="position: relative; display: block; width: 100%; max-width: min(100%, {{ imgW }}); box-sizing: border-box; padding: {{ framePad }}; background: #fbfaf4; box-shadow: 0 22px 40px -18px rgba(50,40,15,.55), 0 0 0 1px rgba(0,0,0,.06); transform: rotate(-1.2deg);">
+              <div style="position: absolute; top: -14px; left: 50%; width: 92px; height: 26px; margin-left: -46px; background: rgba(224,214,168,.72); box-shadow: 0 1px 2px rgba(0,0,0,.12); transform: rotate(-2deg);"></div>
+              <video ref="{{ videoRef }}" src="{{ videoSrc }}" controls="{{ true }}" loop="{{ true }}" muted="{{ true }}" preload="metadata" playsInline="{{ true }}" style="display: block; width: 100%; aspect-ratio: {{ imgAspect }}; object-fit: contain; background: #14150f; filter: {{ imgFilter }};"></video>
+            </div>
+          </sc-if>
+          <sc-if value="{{ noImg }}" hint-placeholder-val="{{ false }}">
+            <div style="display: block; width: 100%; max-width: min(100%, 420px); box-sizing: border-box; padding: 16px; background: rgba(251,250,244,.55); box-shadow: 0 18px 34px -22px rgba(50,40,15,.4); transform: rotate(-1deg);">
+              <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px; width: 100%; aspect-ratio: 3 / 4; box-sizing: border-box; padding: 24px; border: 1px dashed rgba(120,110,70,.55); background-image: repeating-linear-gradient(45deg, rgba(120,110,70,.05) 0 8px, rgba(120,110,70,0) 8px 16px);">
+                <div style="font-size: 11px; letter-spacing: .3em; text-transform: uppercase; color: #8a7f5c;">photo à venir</div>
+                <div style="font-size: 14px; line-height: 1.6; text-align: center; color: #6d6a52; white-space: pre-line;">{{ imgHint }}</div>
+                <div style="font-size: 11px; letter-spacing: .12em; color: #9a9075;">drop it here later</div>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ hasTable }}" hint-placeholder-val="{{ false }}">
+            <div style="display: flex; flex-direction: column; gap: 18px; width: 100%; max-width: min(100%, 460px);">
+              <div style="display: flex; flex-direction: column; gap: 14px; font-size: {{ bodySize }}; line-height: 1.7; color: #3d3b30; white-space: pre-line; text-wrap: pretty;">
+                <sc-for list="{{ rightLines }}" as="rline" hint-placeholder-count="2">
+                  <div>{{ rline }}</div>
+                </sc-for>
+              </div>
+              <div style="display: block; width: 100%; box-sizing: border-box; padding: {{ tablePad }}; background: #fbfaf4; box-shadow: 0 22px 40px -18px rgba(50,40,15,.55), 0 0 0 1px rgba(0,0,0,.06); transform: rotate(-.8deg);">
+              <div style="display: grid; grid-template-columns: 1.2fr .9fr .9fr; gap: 10px 12px; align-items: center; font-size: {{ capSize }}; color: #3d3b30;">
+                <div style="font-size: 10.5px; letter-spacing: .18em; text-transform: uppercase; color: #8a7f5c;">critère</div>
+                <div style="font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #7d1f22; text-align: center;">Coach</div>
+                <div style="font-size: 10.5px; letter-spacing: .14em; text-transform: uppercase; color: #8a7f5c; text-align: center;">Pinko</div>
+                <sc-for list="{{ tableRows }}" as="row" hint-placeholder-count="6">
+                  <div style="border-top: 1px solid rgba(120,110,70,.22); padding-top: 8px;">{{ row.k }}</div>
+                  <div style="border-top: 1px solid rgba(120,110,70,.22); padding-top: 8px; text-align: center; letter-spacing: .08em; color: #7d1f22;">{{ row.a }}</div>
+                  <div style="border-top: 1px solid rgba(120,110,70,.22); padding-top: 8px; text-align: center; letter-spacing: .08em; color: #6d6a52;">{{ row.b }}</div>
+                </sc-for>
+              </div>
+              <div style="margin-top: 20px; padding-top: 14px; border-top: 1px solid rgba(120,110,70,.35); display: flex; align-items: baseline; justify-content: space-between; gap: 12px;">
+                <span style="font-size: 11px; letter-spacing: .2em; text-transform: uppercase; color: #8a7f5c;">mon choix</span>
+                <span style="font-family: 'Jost', sans-serif; font-weight: 300; font-size: 22px; letter-spacing: .16em; color: #7d1f22;">COACH</span>
+              </div>
+            </div>
+            </div>
+          </sc-if>
+          <div style="font-size: {{ capSize }}; letter-spacing: .06em; color: #6d6a52; text-align: center; max-width: 82%;">{{ caption }}</div>
+        </div>
+
+        <sc-if value="{{ flipFwd }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: 0; right: 0; width: 50%; height: 100%; transform-origin: left center; transform-style: preserve-3d; animation: flipFwd .62s cubic-bezier(.4,.05,.6,1) forwards; background: linear-gradient(85deg, #e6e3c8, #edebd2 40%, #dcd9bd); box-shadow: -14px 0 40px -10px rgba(0,0,0,.35); pointer-events: none;"></div>
+        </sc-if>
+        <sc-if value="{{ flipBack }}" hint-placeholder-val="{{ false }}">
+          <div style="position: absolute; top: 0; left: 0; width: 50%; height: 100%; transform-origin: right center; transform-style: preserve-3d; animation: flipBack .62s cubic-bezier(.4,.05,.6,1) forwards; background: linear-gradient(95deg, #dcd9bd, #edebd2 60%, #e6e3c8); box-shadow: 14px 0 40px -10px rgba(0,0,0,.35); pointer-events: none;"></div>
+        </sc-if>
+
+        <div style="position: absolute; top: 0; bottom: 0; left: 50%; width: 44px; margin-left: -22px; pointer-events: none; display: {{ gutterDisp }}; background: linear-gradient(90deg, rgba(90,75,35,0) 0%, rgba(90,75,35,.22) 45%, rgba(90,75,35,.3) 50%, rgba(90,75,35,.22) 55%, rgba(90,75,35,0) 100%);"></div>
+      </div>
+    </div>
+
+    <button type="button" onClick="{{ prev }}" aria-label="Previous page" style="position: absolute; top: 50%; left: 6px; margin-top: -26px; width: {{ navSize }}; height: {{ navSize }}; border: none; border-radius: 50%; background: rgba(248,246,238,.9); color: #4a4738; font-size: 20px; cursor: pointer; box-shadow: 0 10px 24px -8px rgba(0,0,0,.5); display: grid; place-items: center;" style-hover="background: #fffdf6; transform: scale(1.06);">‹</button>
+    <button type="button" onClick="{{ next }}" aria-label="Next page" style="position: absolute; top: 50%; right: 6px; margin-top: -26px; width: {{ navSize }}; height: {{ navSize }}; border: none; border-radius: 50%; background: rgba(248,246,238,.9); color: #4a4738; font-size: 20px; cursor: pointer; box-shadow: 0 10px 24px -8px rgba(0,0,0,.5); display: grid; place-items: center;" style-hover="background: #fffdf6; transform: scale(1.06);">›</button>
+
+    <div style="margin-top: 26px; display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 10px;">
+      <sc-for list="{{ dots }}" as="dot" hint-placeholder-count="17">
+        <button type="button" onClick="{{ dot.go }}" aria-label="{{ dot.label }}" style="width: 9px; height: 9px; padding: 0; border: none; border-radius: 50%; cursor: pointer; background: {{ dot.bg }};"></button>
+      </sc-for>
+    </div>
+    <div style="margin-top: 14px; text-align: center; font-size: 11.5px; letter-spacing: .3em; text-transform: uppercase; color: #7d7b63;">← → to turn the page</div>
+  </div>
+</div>
+
+<helmet>
+<meta name="ext-resource-dependency" content="uploads/d4576079-af36-4bea-866e-5fdd77aa6cfc.JPG">
+<meta name="ext-resource-dependency" content="uploads/Gemini_Generated_Image_reo68sreo68sreo6.png">
+<meta name="ext-resource-dependency" content="uploads/PHOTO-2025-07-15-23-14-18-7ecdf844.jpg">
+<meta name="ext-resource-dependency" content="uploads/pasted-1787914278541-0.png">
+<meta name="ext-resource-dependency" content="uploads/Gemini_Generated_Image_npbtolnpbtolnpbt.jpeg">
+<meta name="ext-resource-dependency" content="uploads/Gemini_Generated_Image_su11fjsu11fjsu11.jpeg">
+<meta name="ext-resource-dependency" content="uploads/IMG_6035.PNG">
+<meta name="ext-resource-dependency" content="uploads/IMG_0153%20(1).mp4">
+<meta name="ext-resource-dependency" content="uploads/IMG_3153%20(1).mp4">
+<meta name="ext-resource-dependency" content="uploads/IMG_2561%202.JPG">
+<meta name="ext-resource-dependency" content="uploads/sstg-23197172-BCF5-4292-9A05-F43BA79CF0D6.mp4">
+<meta name="ext-resource-dependency" content="uploads/IMG_2559.JPG">
+<meta name="ext-resource-dependency" content="uploads/IMG_0771.PNG">
+<meta name="ext-resource-dependency" content="uploads/IMG_0171.JPG">
+<meta name="ext-resource-dependency" content="uploads/Gemini_Generated_Image_kmzx3akmzx3akmzx-0e894cdd.jpeg">
+<meta name="ext-resource-dependency" content="uploads/od_video-2778_singular_display%20(1).mp4">
+<meta name="ext-resource-dependency" content="uploads/Gemini_Generated_Image_9hlt669hlt669hlt.jpeg">
+<meta name="ext-resource-dependency" content="uploads/IMG_5995.jpeg">
+<meta name="ext-resource-dependency" content="uploads/3bc2e4ac-ba20-4455-9e2b-c693b7e5fedb.jpg">
+<meta name="ext-resource-dependency" content="uploads/Capture%20d%27e%CC%81cran%202026-08-28%20a%CC%80%2011.23.45.png">
+</helmet>
+<div id="asset-vault" aria-hidden="true" style="position: absolute; width: 0; height: 0; overflow: hidden; opacity: 0; pointer-events: none;">
+<img data-key="uploads/d4576079-af36-4bea-866e-5fdd77aa6cfc.JPG" src="uploads/d4576079-af36-4bea-866e-5fdd77aa6cfc.JPG" alt="">
+<img data-key="uploads/Gemini_Generated_Image_reo68sreo68sreo6.png" src="uploads/Gemini_Generated_Image_reo68sreo68sreo6.png" alt="">
+<img data-key="uploads/PHOTO-2025-07-15-23-14-18-7ecdf844.jpg" src="uploads/PHOTO-2025-07-15-23-14-18-7ecdf844.jpg" alt="">
+<img data-key="uploads/pasted-1787914278541-0.png" src="uploads/pasted-1787914278541-0.png" alt="">
+<img data-key="uploads/Gemini_Generated_Image_npbtolnpbtolnpbt.jpeg" src="uploads/Gemini_Generated_Image_npbtolnpbtolnpbt.jpeg" alt="">
+<img data-key="uploads/Gemini_Generated_Image_su11fjsu11fjsu11.jpeg" src="uploads/Gemini_Generated_Image_su11fjsu11fjsu11.jpeg" alt="">
+<img data-key="uploads/IMG_6035.PNG" src="uploads/IMG_6035.PNG" alt="">
+<img data-key="uploads/IMG_2561%202.JPG" src="uploads/IMG_2561%202.JPG" alt="">
+<img data-key="uploads/IMG_2559.JPG" src="uploads/IMG_2559.JPG" alt="">
+<img data-key="uploads/IMG_0771.PNG" src="uploads/IMG_0771.PNG" alt="">
+<img data-key="uploads/IMG_0171.JPG" src="uploads/IMG_0171.JPG" alt="">
+<img data-key="uploads/Gemini_Generated_Image_kmzx3akmzx3akmzx-0e894cdd.jpeg" src="uploads/Gemini_Generated_Image_kmzx3akmzx3akmzx-0e894cdd.jpeg" alt="">
+<img data-key="uploads/Gemini_Generated_Image_9hlt669hlt669hlt.jpeg" src="uploads/Gemini_Generated_Image_9hlt669hlt669hlt.jpeg" alt="">
+<img data-key="uploads/IMG_5995.jpeg" src="uploads/IMG_5995.jpeg" alt="">
+<img data-key="uploads/3bc2e4ac-ba20-4455-9e2b-c693b7e5fedb.jpg" src="uploads/3bc2e4ac-ba20-4455-9e2b-c693b7e5fedb.jpg" alt="">
+<img data-key="uploads/Capture%20d%27e%CC%81cran%202026-08-28%20a%CC%80%2011.23.45.png" src="uploads/Capture%20d%27e%CC%81cran%202026-08-28%20a%CC%80%2011.23.45.png" alt="">
+<video data-key="uploads/IMG_0153%20(1).mp4" src="uploads/IMG_0153%20(1).mp4" preload="none"></video>
+<video data-key="uploads/IMG_3153%20(1).mp4" src="uploads/IMG_3153%20(1).mp4" preload="none"></video>
+<video data-key="uploads/sstg-23197172-BCF5-4292-9A05-F43BA79CF0D6.mp4" src="uploads/sstg-23197172-BCF5-4292-9A05-F43BA79CF0D6.mp4" preload="none"></video>
+<video data-key="uploads/od_video-2778_singular_display%20(1).mp4" src="uploads/od_video-2778_singular_display%20(1).mp4" preload="none"></video>
+</div>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300"><rect width="300" height="300" fill="#23241c"/><rect x="90" y="90" width="120" height="120" rx="8" fill="#edebd2"/><text x="150" y="172" font-family="Georgia,serif" font-size="64" fill="#7d1f22" text-anchor="middle">W&amp;W</text></svg></template>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;showJapanese&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Book&quot;},&quot;photoTint&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:0.12,&quot;min&quot;:0,&quot;max&quot;:0.6,&quot;step&quot;:0.02,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Book&quot;}}">
+const U = "uploads/";
+const SPREADS = [
+  {
+    kicker: "un carnet, une vie",
+    title: "WIAM & WISSAL",
+    jp: "— ずっと —",
+    lines: [
+      "this is not a diary.\nit's the notebook we never stopped writing.",
+      "we started as two girls sharing a table.\nwe became sisters without paperwork.",
+      "every page here is a highlight i still remember.\nsome of it drawn like manga,\nsome photographed exactly as they were.",
+      "turn the page. bisou, enjoy."
+    ],
+    img: U + "d4576079-af36-4bea-866e-5fdd77aa6cfc.JPG",
+    caption: "us, still us.",
+    signature: "pour toi, ma belle"
+  },
+  {
+    kicker: "chapitre 01",
+    title: "LA TRESSE",
+    jp: "— はじまり —",
+    lines: [
+      "first day in a new school. we met.\nwe shared a table.",
+      "de simples connaissances,\nnous sommes devenues amies,\npuis meilleures amies.",
+      "then the teacher braided our hair together.\none braid, two heads, the whole class laughing.",
+      "TREEESSE !"
+    ],
+    img: U + "Gemini_Generated_Image_reo68sreo68sreo6.png",
+    wide: true,
+    caption: "one braid, two heads. chapitre un.",
+    signature: "amies fidèles"
+  },
+  {
+    kicker: "chapitre 02",
+    title: "MARKERS & STICKERS",
+    jp: "— しんゆう —",
+    lines: [
+      "before we had phones,\nwe had markers and stickers.",
+      "we wrote in arabic, in french, in english,\nwhatever language the feeling arrived in.",
+      "WISSAL + WIAM = amies fidèles\n= véritable amitié.",
+      "the maths that always worked out."
+    ],
+    img: U + "PHOTO-2025-07-15-23-14-18-7ecdf844.jpg",
+    caption: "\"cette flamme de l'amitié ne s'éteindra jamais.\"",
+    signature: "véritable amitié"
+  },
+  {
+    kicker: "chapitre 03",
+    title: "HOME IS A FEELING",
+    jp: "— いえ —",
+    lines: [
+      "the first time i went to your house\nwas the first time i had ever been\nto a friend's house at all.",
+      "your father sat us down and taught us maths\nlike it was the most normal thing in the world.",
+      "from day one i felt at home.",
+      "that's when it hit me:\nhome is a feeling, not a place."
+    ],
+    img: U + "pasted-1787914278541-0.png",
+    aspect: "4 / 3",
+    w: "520px",
+    caption: "cours de maths à la maison. son père était professeur, et si gentil.",
+    signature: "chez toi, chez moi"
+  },
+  {
+    kicker: "chapitre 04",
+    title: "SBOU3",
+    jp: "— おいわい —",
+    lines: [
+      "then you invited me to the sbou3.\nit was the first time i saw Rihab,\nshe was what, one month old?",
+      "i witnessed the love.\ni witnessed the joy.",
+      "a house full of people who already\nmade room for me."
+    ],
+    img: U + "Gemini_Generated_Image_npbtolnpbtolnpbt.jpeg",
+    wide: true,
+    caption: "",
+    signature: "ta famille, ma famille"
+  },
+  {
+    kicker: "chapitre 05",
+    title: "SORTIE D'ÉCOLE",
+    jp: "— ごぜんごじ —",
+    lines: [
+      "the school trip left at dawn.\nmy dad drove us at 5 a.m.,\nyawning at every red light.",
+      "\"your father is tired.\ni feel bad for him.\"",
+      "\"yeah, he did it because he adores you.\nif it wasn't for you,\ni wouldn't even be going on this excursion.\"",
+      "he was proud of our friendship."
+    ],
+    img: U + "Gemini_Generated_Image_su11fjsu11fjsu11.jpeg",
+    caption: "5 a.m., the old Kangoo, the bus already waiting.",
+    wide: true,
+    signature: "merci, papa"
+  },
+  {
+    kicker: "chapitre 06",
+    title: "PERLA",
+    jp: "— わたしたちのいぬ —",
+    lines: [
+      "i found a dog. we kind of adopted her.\nour first shared pet.",
+      "we named her Perla.",
+      "you came over just to see her,\nto play with her, to shower her,\nto tell her she was beautiful."
+    ],
+    img: U + "IMG_6035.PNG",
+    w: "400px",
+    aspect: "3 / 4",
+    caption: "",
+    signature: "Perla"
+  },
+  {
+    kicker: "chapitre 07",
+    title: "DEUX FAMILLES",
+    jp: "— かぞく —",
+    lines: [
+      "my family knows you by heart.\nyours knows me the same way.",
+      "you put me in your family plans:\nEl Jadida, again and again,\nsummer after summer.",
+      "no invitation needed. i was already counted."
+    ],
+    video: U + "IMG_0153%20(1).mp4",
+    w: "400px",
+    aspect: "9 / 16",
+    caption: "El Jadida again. i stopped counting which summer.",
+    signature: "comptée d'office"
+  },
+  {
+    kicker: "chapitre 08",
+    title: "LE BAC, PUIS LA MER",
+    jp: "— そつぎょう —",
+    lines: [
+      "on a eu le bac.",
+      "and then our first trip together.",
+      "new places, new activities,\nnew memories unlocked.",
+      "one more time: thank you for these memories."
+    ],
+    video: U + "IMG_3153%20(1).mp4",
+    w: "400px",
+    aspect: "9 / 16",
+    caption: "Nador · Saidia · Al Hoceima. our first trip, just us two.",
+    signature: "bac + mer"
+  },
+  {
+    kicker: "chapitre 09",
+    title: "MÊME ÉCOLE, MÊME ROUTE",
+    jp: "— おなじみち —",
+    lines: [
+      "after the bac we landed in the same school again.\nsomehow always the same door.",
+      "on a eu le permis ensemble.\nsame stress, same day, same relief."
+    ],
+    img: U + "IMG_2561%202.JPG",
+    w: "380px",
+    aspect: "9 / 16",
+    caption: "and the tree behind us, celebrating its 28 too.",
+    signature: "toujours au même endroit"
+  },
+  {
+    kicker: "chapitre 10",
+    title: "LE BÉNÉVOLAT",
+    jp: "— ボランティア —",
+    lines: [
+      "volunteer work together.\nofficially: helping out.\nunofficially: the best trip we never paid for.",
+      "new faces every time, new names, new jokes.\nwe left as volunteers and came back\nwith more friends and more contacts.",
+      "we came to give and came home richer.\nhearts full, egos smaller,\nand a hundred stories we still remember.",
+      "and thank you for always including me."
+    ],
+    video: U + "sstg-23197172-BCF5-4292-9A05-F43BA79CF0D6.mp4",
+    w: "400px",
+    aspect: "9 / 16",
+    caption: "the volunteer work in person.",
+    signature: "donner, sans compter"
+  },
+  {
+    kicker: "chapitre 11",
+    title: "QUAND J'AI PERDU MON PÈRE",
+    jp: "— そのひ —",
+    lines: [
+      "you were there.",
+      "not with advice.\nnot with the right sentence.\njust there, the whole time.",
+      "the man who drove us at 5 a.m.\nknew you loved him too.",
+      "i will never forget who stayed."
+    ],
+    img: U + "IMG_2559.JPG",
+    w: "380px",
+    aspect: "9 / 16",
+    caption: "",
+    signature: "tu étais là"
+  },
+  {
+    kicker: "chapitre 12",
+    title: "ESSAOUIRA, GOODBYE",
+    jp: "— おわかれ —",
+    lines: [
+      "my visa came through.",
+      "we went to Essaouira, as a family, all of us.\nthe best possible way to say goodbye.",
+      "we didn't say the word \"miss\" out loud,\nbut we both knew it was coming."
+    ],
+    img: U + "IMG_0771.PNG",
+    w: "400px",
+    aspect: "9 / 16",
+    caption: "the blue streets of Essaouira, walking slowly on purpose.",
+    signature: "à bientôt, jamais adieu"
+  },
+  {
+    kicker: "chapitre 13",
+    title: "TOUBKAL",
+    jp: "— やま —",
+    lines: [
+      "we did Toubkal together,\nexactly like we always said we would.\nlegs destroyed, but happy feet after all."
+    ],
+    img: U + "IMG_0171.JPG",
+    w: "400px",
+    aspect: "2 / 3",
+    caption: "4167 m, arms open, on top of everything.",
+    signature: "au sommet"
+  },
+  {
+    kicker: "chapitre 14",
+    title: "BARCELONA · MILANO · PARIS",
+    jp: "— たび —",
+    lines: [
+      "then your visa came too.",
+      "and we had our first real trip:\nBarcelona, Milano, Paris.",
+      "cities we used to look at on a screen,\ncrossed on foot, together.",
+      "and the best ones are yet to come."
+    ],
+    img: U + "Gemini_Generated_Image_kmzx3akmzx3akmzx-0e894cdd.jpeg",
+    caption: "the Barcelona swim by night, a core memory locked in my mind.",
+    wide: true,
+    signature: "volume deux"
+  },
+  {
+    kicker: "chapitre 15",
+    title: "HAUTS ET BAS",
+    jp: "— ともに —",
+    lines: [
+      "we crossed the ups and the downs together.\nnever one at a time.",
+      "i witnessed your relationships.\nyou witnessed mine.\nthen we witnessed the breakups too.",
+      "we bestied so hard that even our problems match.",
+      "nobody is fixing anything here.\nwe are just synchronized."
+    ],
+    video: U + "od_video-2778_singular_display%20(1).mp4",
+    w: "400px",
+    aspect: "9 / 16",
+    caption: "this view is something.",
+    signature: "synchronisées"
+  },
+  {
+    kicker: "chapitre 16",
+    title: "PARTAGER UN REPAS",
+    jp: "— よろこび —",
+    lines: [
+      "this is a core memory that stays with me:\nyou always add joy to people's lives.\nalways.",
+      "i still remember the boys\nwe shared a meal with,\nand the pure joy on their faces.",
+      "nobody filmed it. nobody needed to."
+    ],
+    img: U + "Gemini_Generated_Image_9hlt669hlt669hlt.jpeg",
+    caption: "and again, you made someone's whole day.",
+    wide: true,
+    signature: "la joie, ton métier"
+  },
+  {
+    kicker: "dernière page",
+    title: "LA PLUS CONSTANTE",
+    jp: "— つづく —",
+    lines: [
+      "schools changed. cities changed.\npeople came and left.\ni changed too.",
+      "among all of it you were the most constant one.",
+      "i am very, very grateful for that.",
+      "WIAM + WISSAL = LOVE · LOVE · LOVE\nà suivre. this is only volume one."
+    ],
+    img: U + "IMG_5995.jpeg",
+    w: "400px",
+    aspect: "3 / 4",
+    caption: "this is my favorite photo of you",
+    signature: "je t'aime, ma sœur"
+  },
+  {
+    kicker: "post-scriptum",
+    title: "OH NO, WAIT",
+    jp: "— おまけ —",
+    lines: [
+      "oh no wait. this one is my favorite.",
+      "nevermind.",
+      "you are beautiful in every pic."
+    ],
+    img: U + "3bc2e4ac-ba20-4455-9e2b-c693b7e5fedb.jpg",
+    w: "400px",
+    aspect: "3 / 4",
+    caption: "",
+    signature: "ok now i'm done"
+  },
+  {
+    kicker: "le cadeau",
+    title: "UN SAC, ET UN VŒU",
+    jp: "— おくりもの —",
+    lines: [
+      "i know you deserve more than this.\ni just want you to know it's the least i could do.",
+      "this year asked a lot of you.\nso much stress, so many hard days.\ni want the next one to be a tulip year for you:\npatience, beauty, charm, good things that last.",
+      "ya rebi, a husband who carries you in his eyes.\nsanté first, always. then money, success,\nwork you actually love, and travels, so many travels.",
+      "tout ça et plus, ma belle.",
+      "your new bag is waiting patiently with me\nuntil we meet again.",
+      "je t'aime fort."
+    ],
+    rightLines: [
+      "and yes, i know you wanted the Pinko.\nbut trust me, i did my research.",
+      "ok fine, i didn't really choose it from a review.\ni chose it, and chatgpt simply agreed with me."
+    ],
+    img: U + encodeURI("Capture d'e\u0301cran 2026-08-28 a\u0300 11.23.45.png").replace(/'/g, "%27"),
+    w: "300px",
+    aspect: "4 / 3",
+    table: [
+      { k: "Élégance", a: "★★★★★", b: "★★★★½" },
+      { k: "Intemporel", a: "★★★★★", b: "★★★½" },
+      { k: "Facile à porter", a: "★★★★★", b: "★★★" },
+      { k: "Effet cadeau", a: "★★★★★", b: "★★★★" },
+      { k: "Originalité", a: "★★★★★", b: "★★★★" },
+      { k: "Qualité / prix", a: "★★★★½", b: "★★★★" }
+    ],
+    caption: "",
+    signature: "joyeux anniversaire ma sœur"
+  }
+];
+
+class Component extends DCLogic {
+  state = { i: 0, flip: 0, narrow: typeof window !== "undefined" && window.innerWidth < 860 };
+  vref = React.createRef();
+
+  resolve(p) {
+    if (!p) return "";
+    if (p.slice(0, 5) === "data:" || p.slice(0, 5) === "blob:") return p;
+    if (!this._vault) {
+      this._vault = {};
+      const els = document.querySelectorAll("#asset-vault [data-key]");
+      for (let i = 0; i < els.length; i++) {
+        const k = els[i].getAttribute("data-key");
+        const s = els[i].getAttribute("src") || "";
+        if (k && s.slice(0, 5) === "data:") this._vault[k] = s;
+      }
+    }
+    return this._vault[p] || p;
+  }
+
+  syncVideo() {
+    const el = this.vref.current;
+    const src = this.resolve(SPREADS[this.state.i].video);
+    if (!el || !src) return;
+    if (el.getAttribute("data-src") !== src) {
+      el.setAttribute("data-src", src);
+      el.src = src;
+      el.load();
+    }
+  }
+
+  componentDidUpdate() { this.syncVideo(); }
+
+  componentDidMount() {
+    this.syncVideo();
+    try {
+      const saved = parseInt(localStorage.getItem("ww-book-spread") || "0", 10);
+      if (!isNaN(saved) && saved > 0 && saved < SPREADS.length) this.setState({ i: saved });
+    } catch (e) {}
+    this._key = (e) => {
+      if (e.key === "ArrowRight") this.go(this.state.i + 1, 1);
+      if (e.key === "ArrowLeft") this.go(this.state.i - 1, -1);
+    };
+    window.addEventListener("keydown", this._key);
+    this._resize = () => {
+      const n = window.innerWidth < 860;
+      if (n !== this.state.narrow) this.setState({ narrow: n });
+    };
+    window.addEventListener("resize", this._resize);
+    this._resize();
+    this._touch = { x: 0, y: 0 };
+    this._ts = (e) => { const t = e.touches[0]; this._touch = { x: t.clientX, y: t.clientY }; };
+    this._te = (e) => {
+      const t = e.changedTouches[0];
+      const dx = t.clientX - this._touch.x, dy = t.clientY - this._touch.y;
+      if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) this.go(this.state.i + (dx < 0 ? 1 : -1), dx < 0 ? 1 : -1);
+    };
+    window.addEventListener("touchstart", this._ts, { passive: true });
+    window.addEventListener("touchend", this._te, { passive: true });
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keydown", this._key);
+    window.removeEventListener("resize", this._resize);
+    window.removeEventListener("touchstart", this._ts);
+    window.removeEventListener("touchend", this._te);
+    clearTimeout(this._t);
+  }
+
+  go(n, dir) {
+    if (n < 0 || n > SPREADS.length - 1 || n === this.state.i) return;
+    const d = dir || (n > this.state.i ? 1 : -1);
+    this.setState({ i: n, flip: d });
+    try { localStorage.setItem("ww-book-spread", String(n)); } catch (e) {}
+    clearTimeout(this._t);
+    this._t = setTimeout(() => this.setState({ flip: 0 }), 640);
+  }
+
+  renderVals() {
+    const i = this.state.i;
+    const s = SPREADS[i];
+    const tint = this.props.photoTint ?? 0.12;
+    const nar = this.state.narrow;
+    return {
+      gridCols: "1fr 1fr",
+      pagePad: nar ? "22px 16px 16px 18px" : "62px 58px 46px 66px",
+      pagePadR: nar ? "22px 18px 20px 16px" : "62px 58px 46px",
+      pageMinH: nar ? "420px" : "700px",
+      coverPad: nar ? "10px 10px 14px" : "30px 34px 38px",
+      titleSize: nar ? "17px" : "46px",
+      navSize: nar ? "34px" : "52px",
+      shellPad: nar ? "10px 6px 22px" : "40px 20px",
+      gutterDisp: "block",
+      bodySize: nar ? "9.5px" : "15.5px",
+      kickerSize: nar ? "7.5px" : "11px",
+      capSize: nar ? "8px" : "13.5px",
+      jpSize: nar ? "9px" : "14px",
+      sigSize: nar ? "9px" : "13px",
+      gapMain: nar ? "12px" : "26px",
+      framePad: nar ? "6px" : "14px",
+      tablePad: nar ? "12px 12px" : "22px 24px",
+      kicker: s.kicker,
+      title: s.title,
+      jp: (this.props.showJapanese ?? true) ? s.jp : "",
+      lines: s.lines,
+      img: this.resolve(s.img) || "",
+      hasImg: !!s.img && !s.video,
+      hasVideo: !!s.video,
+      videoSrc: this.resolve(s.video) || "",
+      videoRef: this.vref,
+      noImg: !s.img && !s.video && !s.table,
+      hasTable: !!s.table,
+      tableRows: s.table || [],
+      rightLines: s.rightLines || [],
+      imgHint: s.imgHint || "",
+      caption: s.caption || "",
+      signature: s.signature,
+      pageLabel: String(i + 1).padStart(2, "0") + " / " + String(SPREADS.length).padStart(2, "0"),
+      imgW: s.w || (s.wide ? "660px" : "400px"),
+      imgAspect: s.aspect || (s.wide ? "16 / 9" : "3 / 4"),
+      imgFilter: "sepia(" + tint + ") saturate(" + (1 - tint * 0.3) + ") contrast(1.02)",
+      flipFwd: this.state.flip === 1,
+      flipBack: this.state.flip === -1,
+      next: () => this.go(i + 1, 1),
+      prev: () => this.go(i - 1, -1),
+      dots: SPREADS.map((sp, n) => ({
+        label: sp.title,
+        bg: n === i ? "#f2efe0" : "rgba(242,239,224,.32)",
+        go: () => this.go(n)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
